@@ -106,6 +106,15 @@ io.on('connection', (socket) => {
 				socket.emit('message', {nick: '~', color: '#fff', msg: msg, home: 'nodejs', date: d.getTime()})
 				return
 			}
+
+			if(data==='/o'||data==='/who') {
+				msg = 'Users:\n=======================' + leaderboard.map(e => {
+					return `\nUsername: ${users[e].nick}\nColor: ${users[e].color}\nHome: ${users[e].home}`
+				}).join('\n=======================') + '\n======================='
+				socket.emit('message', {nick: '~', color: '#fff', msg: msg, home: 'nodejs', date: d.getTime()})
+				return;
+			}
+
 			console.log(`${he.decode(users[socket.id].nick)} (from ${Object.keys(socket.rooms)[0]}): ${data}`)
 			io.to(Object.keys(socket.rooms)[0]).emit('message', {...users[socket.id], msg: he.encode(data), date: d.getTime()});
 			delete d
