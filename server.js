@@ -46,10 +46,10 @@ function check_for_ban(socket) {
 	home = createHash('sha256').update(socket.handshake.address).digest('hex')
 	if(banned_users.includes(home)) {
 		d = new Date()
-		socket.emit('message', {nick: '~', color: '#fff', msg: '<em>you have been banned from teh trollbox</em>', home: 'nodejs', date: d.getTime()})
+		socket.emit('message', {nick: '[SERVER]', color: 'lime', msg: '<em>you have been banned from chatbox. if you think this is a mistake contact us https://yayplayground.neocities.org/sns</em>', home: 'nodejs', date: d.getTime()})
 		socket.disconnect()
 		if(users[socket.id]) {
-			io.emit('message', {color: '#f00', nick: '←', msg: printNick(users[socket.id]) + ' <em>has been banned from teh trollbox</em>', home: 'nodejs', date: d.getTime()})
+			io.emit('message', {color: 'lime', nick: '[SERVER]', msg: printNick(users[socket.id]) + ' <em>has been banned from teh trollbox</em>', home: 'nodejs', date: d.getTime()})
 			leaderboard.splice(leaderboard.indexOf(socket.id), 1) // leaderboard fix
 			io.emit('update users', leaderboard.map(u=>users[u]))
 			delete users[socket.id]
@@ -62,7 +62,7 @@ function goto_room(socket, r) {
 	PREV_ROOM = Object.keys(socket.rooms)[0]
 	socket.join(r)
 	socket.leave(PREV_ROOM)
-	msg = {nick: '~', color: '#fff', msg: printNick(users[socket.id])+' has entered room: <b>' + he.encode(r) + '</b>', home: 'nodejs', date: d.getTime()}
+	msg = {nick: '[SERVER]', color: 'lime', msg: printNick(users[socket.id])+' has entered room: <b>' + he.encode(r) + '</b>', home: 'nodejs', date: d.getTime()}
 	io.to(PREV_ROOM).to(r).emit('message', msg)
 	console.log(`~ ${users[socket.id].nick} has entered room: ${r}`)
 }
