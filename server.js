@@ -103,7 +103,7 @@ io.on('connection', (socket) => {
 				for(i=0;i<rs.length;i++) {
 					msg += `${rs[i].name} (${rs[i].members})\n`
 				}
-				socket.emit('message', {nick: '~', color: '#fff', msg: msg, home: 'nodejs', date: d.getTime()})
+				socket.emit('message', {nick: '[SERVER]', color: 'lime', msg: msg, home: 'nodejs', date: d.getTime()})
 				return
 			}
 
@@ -111,7 +111,7 @@ io.on('connection', (socket) => {
 				msg = 'Users:\n=======================' + leaderboard.map(e => {
 					return `\nUsername: ${users[e].nick}\nColor: ${users[e].color}\nHome: ${users[e].home}`
 				}).join('\n=======================') + '\n======================='
-				socket.emit('message', {nick: '~', color: '#fff', msg: msg, home: 'nodejs', date: d.getTime()})
+				socket.emit('message', {nick: '[SERVER]', color: 'lime', msg: msg, home: 'nodejs', date: d.getTime()})
 				return;
 			}
 
@@ -124,7 +124,7 @@ io.on('connection', (socket) => {
 	socket.on('user joined', (pseudo, color, style, pass) => {
 		if(!color) {
 			if(!colors[pseudo]) {
-				color = ['orangered', 'green', '#0088ff', '#fb8700', 'purple', 'magenta'].random()
+				color = ['orangered', 'green', '#0088ff', '#fb8700', 'purple', 'magenta', 'lime', '#c0ffee', 'crimson', 'gold',].random()
 				colors[pseudo] = color
 			} else {
 				color = colors[pseudo]
@@ -133,15 +133,15 @@ io.on('connection', (socket) => {
 		if(!users[socket.id]) {
 			home = createHash('sha256').update(socket.handshake.address).digest('hex');
 			users[socket.id] = {nick: he.encode(pseudo), color, home}
-			console.log(`-> ${users[socket.id].nick} has entered teh trollbox`)
+			console.log(`-> ${users[socket.id].nick} has entered! say hi!`)
 			io.to('atrium').emit('user joined', users[socket.id])
 			if(!leaderboard.includes(socket.id)) {
 				leaderboard.push(socket.id)
 			}
 			d = new Date()
-			socket.emit('message', {nick: '~', color: '#fff', msg: '<b>welcome to teh trollbox clone</b>\nchangelog: <a href="/change.log" target="_blank">/change.log</a>', home: 'nodejs', date: d.getTime()})
+			socket.emit('message', {nick: '[SERVER]', color: 'lime', msg: '<b>Welcome to ChatBox. Say hi!</b>', home: 'nodejs', date: d.getTime()})
 		} else {
-			if(users[socket.id].color!==color) {users[socket.id].color=color} // be silent about it...
+			if(users[socket.id].color!==color) {users[socket.id].color=color}
 			if(users[socket.id].nick!==pseudo) {
 				ou = users[socket.id]
 				console.log(ou)
@@ -157,7 +157,7 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
 		if(users[socket.id]) {
 			io.emit('user left', users[socket.id])
-			console.log(`<- ${he.decode(users[socket.id].nick)} has left teh trollbox`)
+			console.log(`<- ${he.decode(users[socket.id].nick)} has just left :( Bye!`)
 			leaderboard.splice(leaderboard.indexOf(socket.id), 1) // leaderboard fix
 			io.emit('update users', leaderboard.map(u=>users[u]))
 			delete users[socket.id]
