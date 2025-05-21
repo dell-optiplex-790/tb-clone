@@ -1,6 +1,6 @@
 //============================================================//
-// ZALGO text script by tchouky (2009)					          	  //
-// ported to chatbox by red f, from yaycorp (2025) 					  //
+// ZALGO text script by tchouky (2009)						  //
+// ported to trollbox by jankenpopp (2018)					  //
 //============================================================//
 
 var zalgo_up = [
